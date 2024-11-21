@@ -1,0 +1,13 @@
+Group Information
+Group Number: A092
+Dataset Number: DS116
+
+Group Members:
+
+Bharadwaj Rachuri - 23030052
+Vijaya Shri Lanka - 23030241
+Abhishek Gandepalli - 23017109
+Rushanthan Muthiah - 23003043
+Vaishnavi Dondapati - 22075790
+
+GitHub Repository URL: https://github.com/br23aay/A92_DS116_Flight_data_DEL_CCU_Project.git
