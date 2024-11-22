@@ -1,0 +1,57 @@
+getwd()
+data <- read.csv("flight_data_DEL_CCU.csv" )
+head(data,2)
+
+#if (!require(ggplot2)) install.packages("ggplot2")
+# Load necessary libraries
+library(ggplot2)  # For plotting
+library(dplyr)
+
+
+# Step 1: Load the dataset
+#data <- read.csv("flight_data_BOM_BLR.csv", stringsAsFactors = FALSE)
+
+# Step 2: Clean and preprocess the data
+# Convert 'Price' to numeric by removing commas
+data$Price <- as.numeric(gsub(",", "", data$Price))
+data <- data %>%
+  distinct()
+
+data$Duration <- as.character(data$Duration)  # Ensure it's a character string
+duration_split <- strsplit(data$Duration, ":")  # Split by ':'
+
+# Convert hours and minutes to numeric
+convert_to_minutes <- function(duration_string) {
+  # Extract hours and minutes using regular expressions
+  hours <- as.numeric(gsub("([0-9]+) h.*", "\\1", duration_string))  # Extract hours
+  minutes <- as.numeric(gsub(".*([0-9]+) m", "\\1", duration_string))  # Extract minutes
+  
+  # Return the total minutes (hours * 60 + minutes)
+  return(hours * 60 + minutes)
+}
+
+# Replace "N/A" or any invalid values with NA
+data$Duration[data$Duration == "N/A" | data$Duration == "Unknown" | data$Duration == ""] <- NA
+
+# Apply the conversion function, ensuring no NA values in the 'Duration' column
+data$Duration_in_minutes <- sapply(data$Duration, function(x) {
+  if (!is.na(x)) {
+    return(convert_to_minutes(x))  # Convert to minutes if not NA
+  } else {
+    return(NA)  # Return NA if the value is NA
+  }
+})
+
+data_clean <- data[!is.na(data$Duration) & !is.na(data$Price) & 
+                     !is.infinite(data$Duration) & !is.infinite(data$Price) & 
+                     !is.nan(data$Duration) & !is.nan(data$Price), ]
+# Replace NA values in 'Duration' and 'Price' with the median of each column
+data$Duration[is.na(data$Duration)] <- median(data$Duration, na.rm = TRUE)
+data$Price[is.na(data$Price)] <- median(data$Price, na.rm = TRUE)
+
+ggplot(data_clean, aes(x = Duration_in_minutes, y = Price)) +
+  geom_point() +  # Scatter plot
+  geom_smooth(method = "lm", se = FALSE) +  # Linear regression smoothing line
+  labs(title = "Flight Price vs. Duration", x = "Duration (minutes)", y = "Price") +
+  theme_minimal()
+

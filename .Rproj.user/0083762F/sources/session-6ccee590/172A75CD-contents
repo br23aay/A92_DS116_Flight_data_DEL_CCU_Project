@@ -1,0 +1,42 @@
+getwd()
+data <- read.csv("flight_data_DEL_CCU.csv" )
+head(data,2)
+
+#if (!require(ggplot2)) install.packages("ggplot2")
+# Load necessary libraries
+library(ggplot2)  # For plotting
+library(dplyr)
+
+
+# Step 1: Load the dataset
+#data <- read.csv("flight_data_BOM_BLR.csv", stringsAsFactors = FALSE)
+
+# Step 2: Clean and preprocess the data
+# Convert 'Price' to numeric by removing commas
+data$Price <- as.numeric(gsub(",", "", data$Price))
+data <- data %>%
+  distinct()
+
+aggregated_data <- data %>%
+  group_by(FlightCode) %>%
+  summarise(AveragePrice = mean(Price, na.rm = TRUE))
+
+head(aggregated_data)
+
+# Ensure FlightCode is treated as a factor (categorical variable)
+aggregated_data$FlightCode <- as.factor(aggregated_data$FlightCode)
+
+
+# Step 3: Generate the histogram
+ggplot(data, aes(x = FlightCode, y = Price)) +
+  geom_density(data = data, aes(x = Price), 
+               fill = "red", alpha = 0.3) +
+  geom_col(fill = "skyblue", color = "black") +  # Bar chart representing FlightCode vs Price
+  labs(
+    title = "Histogram of Flight IDs vs Price",
+    x = "Flight Code",
+    y = "Price"
+  ) +
+  theme_minimal()
+#hist(data$Price)
+

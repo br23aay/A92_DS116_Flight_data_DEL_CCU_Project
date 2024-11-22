@@ -1,0 +1,32 @@
+getwd()
+data <- read.csv("flight_data_DEL_CCU.csv" )
+head(data,2)
+
+#if (!require(ggplot2)) install.packages("ggplot2")
+# Load necessary libraries
+library(ggplot2)  # For plotting
+library(dplyr)
+
+
+# Step 1: Load the dataset
+#data <- read.csv("flight_data_BOM_BLR.csv", stringsAsFactors = FALSE)
+
+# Step 2: Clean and preprocess the data
+# Convert 'Price' to numeric by removing commas
+data$Price <- as.numeric(gsub(",", "", data$Price))
+data <- data %>%
+  distinct()
+
+
+
+ggplot(data, aes(x = Duration, y = Price)) +
+  geom_point(aes(color = FlightName), size = 2) +  # Scatter plot with points colored by Airline
+  geom_smooth(method = "lm", color = "blue") +  # Add a linear regression line
+  labs(
+    title = "Relationship between Flight Duration and Flight Price",
+    x = "Flight Duration (minutes)",
+    y = "Flight Price (in USD)",
+    color = "Airline"
+  ) +
+  theme_minimal()
+

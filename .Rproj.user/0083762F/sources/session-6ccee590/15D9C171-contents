@@ -1,0 +1,40 @@
+getwd()
+data <- read.csv("flight_data_DEL_CCU.csv" )
+head(data,2)
+library(ggplot2)  # For plotting
+library(dplyr)
+data <- data %>%
+  distinct()
+data$Price <- as.numeric(gsub(",", "", data$Price))
+
+
+data$Duration1 <- sapply(data$Duration, function(x) {
+  # Extract hours and minutes using regular expressions
+  hours <- as.numeric(sub("^(\\d+) h .*", "\\1", x))  # Extract hours
+  minutes <- as.numeric(sub(".* (\\d+) m$", "\\1", x))  # Extract minutes
+  
+  # Convert to total minutes
+  return(hours * 60 + minutes)
+})
+head(data,2)
+
+
+
+# Install ggplot2 if it's not already installed
+if (!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
+
+# Assuming 'bom_blr_data' is your dataset and 'Price' is a numeric column
+
+# Create a scatter plot for Price
+ggplot(data, aes(x = Duration1, y = Price)) +  # Plot Price against row index
+  geom_point(color = "blue", size = 2) +  # Add points to the plot
+  labs(
+    title = "Scatter Plot of Price",
+    x = "Duration",  # The x-axis represents the row index
+    y = "price"
+  ) +
+  theme_minimal()  # Optional: Use a minimal theme
+
+
+

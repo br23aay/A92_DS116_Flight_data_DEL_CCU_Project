@@ -1,0 +1,38 @@
+
+
+
+
+getwd()
+data <- read.csv("flight_data_DEL_CCU.csv" )
+head(data,2)
+library(ggplot2)  # For plotting
+library(dplyr)
+data <- data %>%
+  distinct()
+data$Price1 <- as.numeric(gsub(",", "", data$Price))
+
+
+data$Duration1 <- sapply(data$Duration, function(x) {
+  # Extract hours and minutes using regular expressions
+  hours <- as.numeric(sub("^(\\d+) h .*", "\\1", x))  # Extract hours
+  minutes <- as.numeric(sub(".* (\\d+) m$", "\\1", x))  # Extract minutes
+  
+  # Convert to total minutes
+  return(hours * 60 + minutes)
+})
+head(data,2)
+
+library(ggplot2)
+
+
+# Create the histogram with a density overlay
+ggplot(data, aes(x = Price)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "skyblue", color = "black", alpha = 0.7) +
+  geom_density(color = "red", size = 1) +  # Add density curve
+  labs(
+    title = "Histogram of Price with Density Curve",
+    x = "Price",
+    y = "Density"
+  ) +
+  theme_minimal()
+
