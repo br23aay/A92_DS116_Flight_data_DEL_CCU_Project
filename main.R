@@ -104,9 +104,9 @@ library(corrplot)
 corrplot(correlation_matrix, method = "circle", type = "upper", tl.col = "black", 
          title = "Correlation Matrix")
 
-
-spearman_corr <- cor(data1$Price1, data1$Duration1, method = "spearman")
-
+data2 <- data1[complete.cases(data1$Price1, data1$Duration1), ]
+spearman_corr <- cor(data2$Price1, data2$Duration1, method = "spearman")
+print(spearman_corr)
 # Output the result
 cat("Spearman's Correlation:", spearman_corr, "\n")
 
@@ -114,3 +114,22 @@ ggplot(data1, aes(x = Duration1, y = Price1)) +
   geom_point() +
   stat_smooth(method = "lm", se = FALSE, color = "red") +
   labs(title = "Spearman's Correlation", x = "Duration", y = "Price")
+
+
+pearson_corr <- cor(data2$Price1, data2$Duration1, method = "pearson")
+
+# Print Pearson's Correlation
+cat("Pearson's Correlation between Price and Duration1: ", round(pearson_corr, 2), "\n")
+
+
+pearson_test <- cor.test(data2$Price1, data2$Duration1, method = "pearson")
+
+
+cat("Pearson's Correlation Test Result:\n")
+print(pearson_test)
+
+kendall_corr <- cor(data2$Price1, data2$Duration1, method = "kendall")
+
+
+print(kendall_corr)
+
