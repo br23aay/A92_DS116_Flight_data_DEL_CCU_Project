@@ -133,3 +133,7 @@ kendall_corr <- cor(data2$Price1, data2$Duration1, method = "kendall")
 
 print(kendall_corr)
 
+pairwise_results <- pairwise.wilcox.test(data1$Price1, data1$FlightName, p.adjust.method = "fdr", exact = FALSE)
+# Print the results
+print(pairwise_results)
+
