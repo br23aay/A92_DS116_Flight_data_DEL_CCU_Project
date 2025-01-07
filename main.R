@@ -32,17 +32,11 @@ ggplot(data1, aes(x = FlightName, y = Price1)) +
        x = "Airlines", y = "Price in INR") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))  # Rotate x-axis labels
 
-
-
-
 data1$Duration1 <- sapply(data1$Duration, function(x) {
-  
   
   #convert the duration into minutes
   hours <- as.numeric(sub("^(\\d+) h .*", "\\1", x))  
   minutes <- as.numeric(sub(".* (\\d+) m$", "\\1", x))
-  
-  
   return(hours * 60 + minutes)
 })
 
@@ -81,4 +75,5 @@ correlation_matrix <- cor(data1[, c("Price1", "Duration1")], use = "complete.obs
 pairwise_results <- pairwise.wilcox.test(data1$Price1, data1$FlightName, p.adjust.method = "none", exact = FALSE)
 # Print the results
 print(pairwise_results)
+##
 
