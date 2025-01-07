@@ -136,4 +136,17 @@ print(kendall_corr)
 pairwise_results <- pairwise.wilcox.test(data1$Price1, data1$FlightName, p.adjust.method = "fdr", exact = FALSE)
 # Print the results
 print(pairwise_results)
-
+plot(data1$Price1 ~ data1$FlightName,
+     main = "Flight between New Delhi and Kolkata: Price vs Airlines",
+     xlab = "Airlines",
+     ylab = "Price",
+     pch = 19,         # Plotting points as solid circles
+     col = "cyan",     # Color of points
+     frame = TRUE,     # Add border around plot
+     xaxt = "n")       # Turn off x-axis tick
+axis(1, at = 1:length(levels(data1$FlightName)), labels = levels(data1$FlightName), las = 2)
+ggplot(data1, aes(x = FlightName, y = Price1)) +
+  geom_boxplot(fill = "lightblue", color = "black") +
+  labs(title = "Flight between New Delhi and Kolkata: Price vs Airlines",
+         x = "Airlines", y = "Price in INR") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))  # Rotate x-axis labels
